@@ -1,0 +1,125 @@
+#!KAMAILIO
+
+debug=2
+log_stderror=no
+memdbg=5
+memlog=5
+sip_warning=0
+user="kamailio"
+group="kamailio"
+children=4
+auto_aliases=no
+
+listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__
+listen=tcp:0.0.0.0:__KAMAILIO_SIP_PORT__
+
+loadmodule "db_postgres.so"
+loadmodule "sl.so"
+loadmodule "tm.so"
+loadmodule "rr.so"
+loadmodule "pv.so"
+loadmodule "maxfwd.so"
+loadmodule "textops.so"
+loadmodule "siputils.so"
+loadmodule "xlog.so"
+loadmodule "auth.so"
+loadmodule "auth_db.so"
+loadmodule "usrloc.so"
+loadmodule "registrar.so"
+loadmodule "alias_db.so"
+
+modparam("db_postgres", "timeout", 10)
+
+modparam("auth_db", "db_url", "postgres://__DB_USER__:__DB_PASSWORD__@__DB_HOST__:__DB_PORT__/__DB_NAME__")
+modparam("auth_db", "password_column", "ha1")
+modparam("auth_db", "password_column_2", "ha1b")
+modparam("auth_db", "load_credentials", "")
+modparam("auth_db", "use_domain", 1)
+
+modparam("usrloc", "db_url", "postgres://__DB_USER__:__DB_PASSWORD__@__DB_HOST__:__DB_PORT__/__DB_NAME__")
+modparam("usrloc", "db_mode", 2)
+modparam("usrloc", "use_domain", 1)
+modparam("usrloc", "matching_mode", 0)
+
+modparam("alias_db", "db_url", "postgres://__DB_USER__:__DB_PASSWORD__@__DB_HOST__:__DB_PORT__/__DB_NAME__")
+modparam("alias_db", "use_domain", 1)
+
+modparam("registrar", "default_expires", 3600)
+modparam("registrar", "min_expires", 60)
+modparam("registrar", "max_expires", 7200)
+
+request_route {
+    xlog("L_INFO", "Received $rm from $fu to $ru\n");
+
+    if (!mf_process_maxfwd_header("10")) {
+        sl_send_reply("483", "Too Many Hops");
+        exit;
+    }
+
+    if (has_totag()) {
+        if (loose_route()) {
+            route(RELAY);
+        } else {
+            if (is_method("ACK")) {
+                route(RELAY);
+            } else {
+                sl_send_reply("404", "Not here");
+            }
+        }
+        exit;
+    }
+
+    if (!is_method("REGISTER")) {
+        record_route();
+    }
+
+    if (is_method("REGISTER")) {
+        route(REGISTER);
+        exit;
+    }
+
+    if (!auth_check("$fd", "subscriber", "1")) {
+        auth_challenge("$fd", "0");
+        exit;
+    }
+
+    consume_credentials();
+
+    if (is_method("INVITE")) {
+        route(LOOKUP);
+    }
+
+    route(RELAY);
+}
+
+route[REGISTER] {
+    if (!auth_check("$fd", "subscriber", "0")) {
+        auth_challenge("$fd", "0");
+        exit;
+    }
+
+    consume_credentials();
+
+    if (!save("location")) {
+        sl_reply_error();
+    }
+    exit;
+}
+
+route[LOOKUP] {
+    if (!alias_db_lookup("aliases")) {
+        xlog("L_INFO", "No alias found for $rU, trying direct lookup\n");
+    }
+
+    if (!lookup("location")) {
+        sl_send_reply("404", "User Not Found");
+        exit;
+    }
+}
+
+route[RELAY] {
+    if (!t_relay()) {
+        sl_reply_error();
+    }
+    exit;
+}

@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+$group = $argv[1] ?? '0';
+$dbHost = getenv('DB_HOST') ?: 'postgres';
+$dbPort = getenv('DB_PORT') ?: '5432';
+$dbName = getenv('DB_NAME') ?: 'kamailio';
+$dbUser = getenv('DB_USER') ?: 'kamailio';
+$dbPass = getenv('DB_PASSWORD') ?: '';
+$domain = getenv('SIP_DOMAIN') ?: 'sip.friendsofthemoon.space';
+
+try {
+    $pdo = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $bit = 1 << ((int)$group - 1);
+    $stmt = $pdo->prepare("SELECT username FROM kamailio.subscriber WHERE (group_flags & ?) > 0 ORDER BY username");
+    $stmt->execute([$bit]);
+    $users = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    foreach ($users as $user) {
+        echo "EXEC Dial PJSIP/$user@$domain 30\n";
+        echo "WAIT\n";
+    }
+    echo "EXEC Playback goodbye\n";
+} catch (PDOException $e) {
+    error_log("AGI DB error: " . $e->getMessage());
+    echo "EXEC Playback invalid\n";
+}

@@ -1,0 +1,160 @@
+
+services:
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: kamailio-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      SIP_DOMAIN: ${SIP_DOMAIN}
+      ASTERISK_SECRET: ${ASTERISK_SECRET}
+      ASTERISK_NUMBER: ${ASTERISK_NUMBER}
+    networks:
+      - kamailio-net
+    volumes:
+      - /mnt/Main/apps/kamailio-db:/var/lib/postgresql/data
+      - /mnt/Main/apps/phones-config/init.sql.template:/tmp/init.sql.template:ro
+    command: |
+      sh -c '
+        set -x
+        echo "SIP_DOMAIN=$SIP_DOMAIN"
+        echo "ASTERISK_NUMBER=$ASTERISK_NUMBER"
+        echo "ASTERISK_SECRET=$ASTERISK_SECRET"
+        sed -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
+            -e "s|__ASTERISK_NUMBER__|${ASTERISK_NUMBER}|g" \
+            -e "s|__ASTERISK_SECRET__|${ASTERISK_SECRET}|g" \
+            /tmp/init.sql.template > /docker-entrypoint-initdb.d/init.sql &&
+        exec docker-entrypoint.sh postgres
+      '
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${DB_USER} -d ${DB_NAME}
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:${PGADMIN_VERSION}
+    container_name: kamailio-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    networks:
+      - kamailio-net
+    ports:
+      - '${PGADMIN_PORT}:80'
+    volumes:
+      - /mnt/Main/apps/kamailio-pgadmin:/var/lib/pgadmin
+      - /mnt/Main/apps/phones-config/pgadmin_servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  kamailio:
+    image: ghcr.io/kamailio/kamailio:${KAMAILIO_VERSION}
+    container_name: kamailio
+    restart: unless-stopped
+    cap_add:
+      - NET_BIND_SERVICE
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      SIP_DOMAIN: ${SIP_DOMAIN}
+      KAMAILIO_SIP_PORT: ${KAMAILIO_SIP_PORT}
+    networks:
+      - kamailio-net
+    ports:
+      - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/udp
+      - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/tcp
+      - ${KAMAILIO_SIPS_PORT}:${KAMAILIO_SIPS_PORT}/tcp
+      - ${KAMAILIO_SIPS_PORT}:${KAMAILIO_SIPS_PORT}/udp
+    volumes:
+      - /mnt/Main/apps/phones-config/kamailio.cfg.template:/etc/kamailio/kamailio.cfg.template
+    command: |
+      sh -c '
+        sed -e "s|__DB_HOST__|${DB_HOST}|g" \
+            -e "s|__DB_PORT__|${DB_PORT}|g" \
+            -e "s|__DB_NAME__|${DB_NAME}|g" \
+            -e "s|__DB_USER__|${DB_USER}|g" \
+            -e "s|__DB_PASSWORD__|${DB_PASSWORD}|g" \
+            -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
+            -e "s|__KAMAILIO_SIP_PORT__|${KAMAILIO_SIP_PORT}|g" \
+            /etc/kamailio/kamailio.cfg.template > /tmp/kamailio.cfg &&
+        exec kamailio -DD -E -f /tmp/kamailio.cfg
+      '
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    image: webdevops/php-nginx:${WEB_PHP_VERSION}
+    container_name: kamailio-web
+    restart: unless-stopped
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SIP_DOMAIN: ${SIP_DOMAIN}
+      WEB_ADMIN_HASH: ${WEB_ADMIN_HASH}
+    networks:
+      - kamailio-net
+    ports:
+      - '${WEB_PORT}:80'
+    volumes:
+      - /mnt/Main/apps/phones-config/web/index.php:/app/index.php
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  asterisk:
+    image: andrius/asterisk:${ASTERISK_VERSION}
+    container_name: asterisk
+    restart: unless-stopped
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SIP_DOMAIN: ${SIP_DOMAIN}
+      KAMAILIO_SIP_PORT: ${KAMAILIO_SIP_PORT}
+      ASTERISK_SECRET: ${ASTERISK_SECRET}
+      ASTERISK_NUMBER: ${ASTERISK_NUMBER}
+    networks:
+      - kamailio-net
+    volumes:
+      - /mnt/Main/apps/phones-config/asterisk/pjsip.conf.template:/etc/asterisk/pjsip.conf.template
+      - /mnt/Main/apps/phones-config/asterisk/extensions.conf.template:/etc/asterisk/extensions.conf.template
+      - /mnt/Main/apps/phones-config/asterisk/agi/group_call.agi:/var/lib/asterisk/agi-bin/group_call.agi
+      - /mnt/Main/apps/phones-config/asterisk/sounds:/var/lib/asterisk/sounds/custom
+    command: |
+      sh -c '
+        chmod +x /var/lib/asterisk/agi-bin/group_call.agi &&
+        sed -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
+            -e "s|__KAMAILIO_SIP_PORT__|${KAMAILIO_SIP_PORT}|g" \
+            -e "s|__ASTERISK_NUMBER__|${ASTERISK_NUMBER}|g" \
+            -e "s|__ASTERISK_SECRET__|${ASTERISK_SECRET}|g" \
+            /etc/asterisk/pjsip.conf.template > /etc/asterisk/pjsip.conf &&
+        sed -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
+            -e "s|__ASTERISK_NUMBER__|${ASTERISK_NUMBER}|g" \
+            /etc/asterisk/extensions.conf.template > /etc/asterisk/extensions.conf &&
+        exec /usr/sbin/asterisk -f -vvvdddn
+      '
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+networks:
+  kamailio-net:
+    driver: bridge

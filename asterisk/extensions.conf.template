@@ -1,0 +1,41 @@
+[from-kamailio]
+exten => __ASTERISK_NUMBER__,1,Answer()
+ same => n,Wait(1)
+ same => n,Playback(custom/welcome)
+ same => n,Playback(custom/menu_options)
+
+exten => 1,1,NoOp(Group 1 call)
+ same => n,Set(GROUP=1)
+ same => n,Gosub(group-call,s,1)
+
+exten => 2,1,NoOp(Group 2 call)
+ same => n,Set(GROUP=2)
+ same => n,Gosub(group-call,s,1)
+
+exten => 3,1,NoOp(Group 3 call)
+ same => n,Set(GROUP=3)
+ same => n,Gosub(group-call,s,1)
+
+exten => 4,1,NoOp(Group 4 call)
+ same => n,Set(GROUP=4)
+ same => n,Gosub(group-call,s,1)
+
+exten => 5,1,NoOp(Group 5 call)
+ same => n,Set(GROUP=5)
+ same => n,Gosub(group-call,s,1)
+
+exten => i,1,Playback(custom/invalid)
+ same => n,Hangup()
+
+exten => t,1,Playback(custom/goodbye)
+ same => n,Hangup()
+
+[group-call]
+exten => s,1,NoOp(Starting group call for group ${GROUP})
+ same => n,Set(CHANNEL(language)=en)
+ same => n,AGI(/var/lib/asterisk/agi-bin/group_call.agi,${GROUP})
+ same => n,Hangup()
+
+[outbound]
+exten => _X.,1,Dial(PJSIP/${EXTEN}@__SIP_DOMAIN__,30)
+ same => n,Hangup()

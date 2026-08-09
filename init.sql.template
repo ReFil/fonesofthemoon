@@ -1,0 +1,89 @@
+CREATE SCHEMA IF NOT EXISTS kamailio AUTHORIZATION kamailio;
+SET search_path TO kamailio;
+
+CREATE TABLE IF NOT EXISTS version (
+    table_name VARCHAR(64) NOT NULL PRIMARY KEY,
+    table_version INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS subscriber (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(64) NOT NULL,
+    domain VARCHAR(64) NOT NULL DEFAULT '',
+    password VARCHAR(64) NOT NULL,
+    email_address VARCHAR(64),
+    ha1 VARCHAR(128),
+    ha1b VARCHAR(128),
+    friendly_name VARCHAR(128) DEFAULT '',
+    group_flags INT DEFAULT 0,
+    CONSTRAINT subscriber_idx UNIQUE (username, domain)
+);
+
+CREATE TABLE IF NOT EXISTS aliases (
+    id BIGSERIAL PRIMARY KEY,
+    alias_username VARCHAR(64) NOT NULL,
+    alias_domain VARCHAR(64) NOT NULL DEFAULT '',
+    username VARCHAR(64) NOT NULL,
+    domain VARCHAR(64) NOT NULL DEFAULT '',
+    CONSTRAINT aliases_idx UNIQUE (alias_username, alias_domain)
+);
+
+CREATE TABLE IF NOT EXISTS location (
+    id BIGSERIAL PRIMARY KEY,
+    ruid VARCHAR(64) NOT NULL,
+    username VARCHAR(64) NOT NULL,
+    domain VARCHAR(64) NOT NULL DEFAULT '',
+    contact VARCHAR(255) NOT NULL,
+    received VARCHAR(255),
+    path VARCHAR(255),
+    expires TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    q REAL DEFAULT 1.0,
+    callid VARCHAR(255) DEFAULT 'Default-Callid',
+    cseq INT DEFAULT 1,
+    last_modified TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    flags INT DEFAULT 0,
+    cflags INT DEFAULT 0,
+    user_agent VARCHAR(255),
+    socket VARCHAR(64),
+    methods INT,
+    instance VARCHAR(255),
+    reg_id INT DEFAULT 0,
+    server_id INT DEFAULT 0,
+    connection_id INT DEFAULT 0,
+    keepalive INT DEFAULT 0,
+    partition INT DEFAULT 0
+);
+
+CREATE INDEX IF NOT EXISTS location_user_idx ON location(username, domain);
+CREATE INDEX IF NOT EXISTS location_contact_idx ON location(contact);
+CREATE INDEX IF NOT EXISTS location_expires_idx ON location(expires);
+
+INSERT INTO version (table_name, table_version) VALUES
+    ('subscriber', 7),
+    ('location', 9),
+    ('aliases', 4)
+ON CONFLICT (table_name) DO UPDATE SET table_version = EXCLUDED.table_version;
+
+INSERT INTO subscriber (username, domain, password, ha1, ha1b, friendly_name, group_flags)
+VALUES (
+    '1000',
+    '__SIP_DOMAIN__',
+    'welcome',
+    MD5('1000:__SIP_DOMAIN__:welcome'),
+    MD5('1000@__SIP_DOMAIN__:__SIP_DOMAIN__:welcome'),
+    'Example User',
+    0
+);
+
+INSERT INTO subscriber (username, domain, password, ha1, ha1b, friendly_name, group_flags)
+VALUES (
+    '__ASTERISK_NUMBER__',
+    '__SIP_DOMAIN__',
+    '__ASTERISK_SECRET__',
+    MD5('__ASTERISK_NUMBER__:__SIP_DOMAIN__:__ASTERISK_SECRET__'),
+    MD5('__ASTERISK_NUMBER__@__SIP_DOMAIN__:__SIP_DOMAIN__:__ASTERISK_SECRET__'),
+    'Asterisk',
+    0
+)
+
+ON CONFLICT DO NOTHING;
