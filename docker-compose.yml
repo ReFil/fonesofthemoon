@@ -18,10 +18,6 @@ services:
       - /mnt/Main/apps/phones-config/init.sql.template:/tmp/init.sql.template:ro
     command: |
       sh -c '
-        set -x
-        echo "SIP_DOMAIN=$SIP_DOMAIN"
-        echo "ASTERISK_NUMBER=$ASTERISK_NUMBER"
-        echo "ASTERISK_SECRET=$ASTERISK_SECRET"
         sed -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
             -e "s|__ASTERISK_NUMBER__|${ASTERISK_NUMBER}|g" \
             -e "s|__ASTERISK_SECRET__|${ASTERISK_SECRET}|g" \
@@ -88,8 +84,8 @@ services:
             -e "s|__DB_PASSWORD__|${DB_PASSWORD}|g" \
             -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
             -e "s|__KAMAILIO_SIP_PORT__|${KAMAILIO_SIP_PORT}|g" \
-            /etc/kamailio/kamailio.cfg.template > /tmp/kamailio.cfg &&
-        exec kamailio -DD -E -f /tmp/kamailio.cfg
+            /etc/kamailio/kamailio.cfg.template > /etc/kamailio.cfg &&
+        exec kamailio -DD -E
       '
     depends_on:
       postgres:
