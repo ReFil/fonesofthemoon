@@ -75,6 +75,7 @@ services:
       - ${KAMAILIO_SIPS_PORT}:${KAMAILIO_SIPS_PORT}/udp
     volumes:
       - /mnt/Main/apps/phones-config/kamailio.cfg.template:/etc/kamailio/kamailio.cfg.template
+    entrypoint: []
     command: |
       sh -c '
         sed -e "s|__DB_HOST__|${DB_HOST}|g" \
