@@ -75,9 +75,17 @@ services:
       - ${KAMAILIO_SIPS_PORT}:${KAMAILIO_SIPS_PORT}/udp
     volumes:
       - /mnt/Main/apps/phones-config/kamailio.cfg.template:/etc/kamailio/kamailio.cfg.template
+    entrypoint: [""]
     command: |
       sh -c '
-        sed -e "s|__DB_HOST__|${DB_HOST}|g" /etc/kamailio/kamailio.cfg.template > /etc/kamailio/kamailio.cfg &&
+        sed -e "s|__DB_HOST__|${DB_HOST}|g" \
+            -e "s|__DB_PORT__|${DB_PORT}|g" \
+            -e "s|__DB_NAME__|${DB_NAME}|g" \
+            -e "s|__DB_USER__|${DB_USER}|g" \
+            -e "s|__DB_PASSWORD__|${DB_PASSWORD}|g" \
+            -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
+            -e "s|__KAMAILIO_SIP_PORT__|${KAMAILIO_SIP_PORT}|g" \
+            /etc/kamailio/kamailio.cfg.template > /etc/kamailio/kamailio.cfg &&
         exec kamailio -DD -E
       '
     depends_on:
