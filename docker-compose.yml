@@ -84,8 +84,8 @@ services:
             -e "s|__DB_PASSWORD__|${DB_PASSWORD}|g" \
             -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
             -e "s|__KAMAILIO_SIP_PORT__|${KAMAILIO_SIP_PORT}|g" \
-            /etc/kamailio/kamailio.cfg.template > /etc/kamailio/kamailio.cfg &&
-        exec kamailio -DD -E
+            /etc/kamailio/kamailio.cfg.template > /etc/kamailio/kamailio2.cfg &&
+        exec kamailio -DD -E -f /etc/kamailio/kamailio2.cfg
       '
     depends_on:
       postgres:
