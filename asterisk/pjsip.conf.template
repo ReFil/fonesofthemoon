@@ -28,6 +28,7 @@ context=from-kamailio
 disallow=all
 allow=ulaw
 allow=alaw
+allow=g729
 allow=g722
 allow=slin
 outbound_auth=kamailio_auth
