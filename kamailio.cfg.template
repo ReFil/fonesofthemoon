@@ -2,7 +2,7 @@
 
 # Set debug to 4 for additional logging
 
-debug=4
+debug=3
 log_stderror=no
 memdbg=5
 memlog=5
@@ -12,8 +12,8 @@ group="kamailio"
 children=4
 auto_aliases=no
 
-listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__
-listen=tcp:0.0.0.0:__KAMAILIO_SIP_PORT__
+listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__ advertise "__SIP_DOMAIN__":__KAMAILIO_SIP_PORT__
+
 
 loadmodule "db_postgres.so"
 loadmodule "sl.so"
