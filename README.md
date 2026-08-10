@@ -20,7 +20,7 @@ Kamailio is the SIP server managing all the connections. For either a dect
 
 ## Asterisk
 
-Asterisk manages the moon group calling for now, but maybe it will be tweaked in the fitire
+Asterisk manages the moon group calling for now, but maybe it will be tweaked in the fitire to do more fun things
 
 
 
@@ -29,3 +29,6 @@ Asterisk manages the moon group calling for now, but maybe it will be tweaked in
 To generate sounds for playback run this command
 ffmpeg -i input.mp3 -ar 8000 -ac 1 -acodec pcm_s16le output.wav
 then copy to the asterisk/sounds directory and reference in the conf file(s)
+
+## Deploying it yourself
+
