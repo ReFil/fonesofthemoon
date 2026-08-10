@@ -1,6 +1,4 @@
 [from-kamailio]
-exten => __ASTERISK_NUMBER__,1,Answer()
- same => n,Wait(2)
- same => n,Playback(hello-world)
+exten => __ASTERISK_NUMBER__,1,Answer(500)
  same => n,Playback(custom/hello&custom/fones&custom/dialext)
  same => n,Hangup()
