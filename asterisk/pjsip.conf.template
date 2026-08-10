@@ -45,4 +45,4 @@ contact=sip:__SIP_DOMAIN__:__KAMAILIO_SIP_PORT__
 [kamailio_identify]
 type=identify
 endpoint=kamailio_endpoint
-match=kamailio
+match=172.16.0.0/16
