@@ -132,7 +132,7 @@ services:
     networks:
       - kamailio-net
     ports:
-      - "10000-10100:10000-10100/udp"
+      - "20000-20100:20000-20100/udp"
     volumes:
       - /mnt/Main/apps/phones-config/asterisk/pjsip.conf.template:/etc/asterisk/pjsip.conf.template
       - /mnt/Main/apps/phones-config/asterisk/rtp.conf:/etc/asterisk/rtp.conf
