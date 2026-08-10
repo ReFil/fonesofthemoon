@@ -70,7 +70,6 @@ services:
       - kamailio-net
     ports:
       - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/udp
-      - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/tcp
     volumes:
       - /mnt/Main/apps/phones-config/kamailio.cfg.template:/etc/kamailio/kamailio.cfg.template
     entrypoint: [""]
