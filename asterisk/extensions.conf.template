@@ -1,8 +1,9 @@
 [from-kamailio]
 exten => __ASTERISK_NUMBER__,1,Answer()
  same => n,Wait(1)
- same => n,Playback(custom/welcome)
- same => n,Playback(custom/menu_options)
+ same => n,Playback(custom/hello)
+ same => n,Playback(custom/fones)
+ same => n,Playback(custom/dialext)
 
 exten => 1,1,NoOp(Group 1 call)
  same => n,Set(GROUP=1)
@@ -24,7 +25,7 @@ exten => 5,1,NoOp(Group 5 call)
  same => n,Set(GROUP=5)
  same => n,Gosub(group-call,s,1)
 
-exten => i,1,Playback(custom/invalid)
+exten => i,1,Playback(custom/ext)
  same => n,Hangup()
 
 exten => t,1,Playback(custom/goodbye)

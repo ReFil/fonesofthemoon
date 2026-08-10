@@ -73,7 +73,9 @@ VALUES (
     MD5('1000@__SIP_DOMAIN__:__SIP_DOMAIN__:welcome'),
     'Example User',
     0
-);
+)
+
+ON CONFLICT DO NOTHING;
 
 INSERT INTO subscriber (username, domain, password, ha1, ha1b, friendly_name, group_flags)
 VALUES (

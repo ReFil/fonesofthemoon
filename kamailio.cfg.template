@@ -1,5 +1,7 @@
 #!KAMAILIO
 
+# Set debug to 4 for additional logging
+
 debug=2
 log_stderror=no
 memdbg=5
@@ -31,6 +33,7 @@ loadmodule "alias_db.so"
 modparam("db_postgres", "timeout", 10)
 
 modparam("auth_db", "db_url", "postgres://__DB_USER__:__DB_PASSWORD__@__DB_HOST__:__DB_PORT__/__DB_NAME__")
+# Ha1 and Ha1b are the two formats of MD5'd authentication that clients usually sebnd
 modparam("auth_db", "password_column", "ha1")
 modparam("auth_db", "password_column_2", "ha1b")
 modparam("auth_db", "load_credentials", "")
@@ -47,6 +50,8 @@ modparam("alias_db", "use_domain", 1)
 modparam("registrar", "default_expires", 3600)
 modparam("registrar", "min_expires", 60)
 modparam("registrar", "max_expires", 7200)
+
+# basic routing
 
 request_route {
     xlog("L_INFO", "Received $rm from $fu to $ru\n");
