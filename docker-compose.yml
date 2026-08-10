@@ -66,6 +66,8 @@ services:
       DB_USER: ${DB_USER}
       SIP_DOMAIN: ${SIP_DOMAIN}
       KAMAILIO_SIP_PORT: ${KAMAILIO_SIP_PORT}
+      ASTERISK_PUBLIC_IP: ${ASTERISK_PUBLIC_IP}
+
     networks:
       - kamailio-net
     ports:
@@ -82,6 +84,7 @@ services:
             -e "s|__DB_PASSWORD__|${DB_PASSWORD}|g" \
             -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
             -e "s|__KAMAILIO_SIP_PORT__|${KAMAILIO_SIP_PORT}|g" \
+            -e "s|__ASTERISK_PUBLIC_IP__|${ASTERISK_PUBLIC_IP}|g" \
             /etc/kamailio/kamailio.cfg.template > /etc/kamailio/kamailio.cfg &&
         exec kamailio -DD -E
       '

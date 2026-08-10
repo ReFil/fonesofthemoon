@@ -12,7 +12,7 @@ group="kamailio"
 children=4
 auto_aliases=no
 
-listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__ advertise "__SIP_DOMAIN__":__KAMAILIO_SIP_PORT__
+listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__ advertise __ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__
 
 
 loadmodule "db_postgres.so"
