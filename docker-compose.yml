@@ -71,8 +71,6 @@ services:
     ports:
       - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/udp
       - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/tcp
-      - ${KAMAILIO_SIPS_PORT}:${KAMAILIO_SIPS_PORT}/tcp
-      - ${KAMAILIO_SIPS_PORT}:${KAMAILIO_SIPS_PORT}/udp
     volumes:
       - /mnt/Main/apps/phones-config/kamailio.cfg.template:/etc/kamailio/kamailio.cfg.template
     entrypoint: [""]
@@ -129,9 +127,11 @@ services:
       ASTERISK_SECRET: ${ASTERISK_SECRET}
       ASTERISK_NUMBER: ${ASTERISK_NUMBER}
       ASTERISK_PUBLIC_IP: ${ASTERISK_PUBLIC_IP}
+      ASTERISK_SIP_PORT: ${ASTERISK_SIP_PORT}
     networks:
       - kamailio-net
     ports:
+      - ${ASTERISK_SIP_PORT}:${ASTERISK_SIP_PORT}/udp
       - "20000-20100:20000-20100/udp"
     volumes:
       - /mnt/Main/apps/phones-config/asterisk/pjsip.conf.template:/etc/asterisk/pjsip.conf.template
@@ -147,6 +147,7 @@ services:
             -e "s|__ASTERISK_NUMBER__|${ASTERISK_NUMBER}|g" \
             -e "s|__ASTERISK_SECRET__|${ASTERISK_SECRET}|g" \
             -e "s|__ASTERISK_PUBLIC_IP__|${ASTERISK_PUBLIC_IP}|g" \
+            -e "s|__ASTERISK_SIP_PORT__|${ASTERISK_SIP_PORT}|g" \
             /etc/asterisk/pjsip.conf.template > /etc/asterisk/pjsip.conf &&
         sed -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
             -e "s|__ASTERISK_NUMBER__|${ASTERISK_NUMBER}|g" \
