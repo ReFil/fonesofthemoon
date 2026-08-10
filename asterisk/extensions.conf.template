@@ -1,5 +1,5 @@
 [from-kamailio]
 exten => __ASTERISK_NUMBER__,1,Answer()
  same => n,Wait(1)
- same => n,Playback(silence/1&custom/hello&custom/fones&custom/dialext)
+ same => n,Playback(custom/hello&custom/fones&custom/dialext)
  same => n,Hangup()
