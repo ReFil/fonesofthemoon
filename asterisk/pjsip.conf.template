@@ -26,6 +26,7 @@ disallow=all
 allow=ulaw
 allow=alaw
 allow=g722
+allow=slin
 outbound_auth=kamailio_auth
 aors=kamailio_aor
 from_user=__ASTERISK_NUMBER__
