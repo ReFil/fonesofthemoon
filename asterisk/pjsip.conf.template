@@ -2,6 +2,9 @@
 type=transport
 protocol=udp
 bind=0.0.0.0:5060
+external_media_address=__ASTERISK_PUBLIC_IP__
+external_signaling_address=__ASTERISK_PUBLIC_IP__
+local_net=172.16.11.0/24
 
 [kamailio]
 type=registration
@@ -30,6 +33,10 @@ allow=slin
 outbound_auth=kamailio_auth
 aors=kamailio_aor
 from_user=__ASTERISK_NUMBER__
+direct_media=no
+rtp_symmetric=yes
+force_rport=yes
+rewrite_contact=yes
 
 [kamailio_aor]
 type=aor
