@@ -85,8 +85,8 @@ request_route {
         exit;
     }
 
-    if (!auth_check("$fd", "subscriber", "1")) {
-        auth_challenge("$fd", "0");
+    if (!auth_check("__SIP_DOMAIN__", "subscriber", "1")) {
+        auth_challenge("__SIP_DOMAIN__", "0");
         exit;
     }
 
@@ -100,8 +100,8 @@ request_route {
 }
 
 route[REGISTER] {
-    if (!auth_check("$fd", "subscriber", "0")) {
-        auth_challenge("$fd", "0");
+    if (!auth_check("__SIP_DOMAIN__", "subscriber", "0")) {
+        auth_challenge("__SIP_DOMAIN__", "0");
         exit;
     }
 
