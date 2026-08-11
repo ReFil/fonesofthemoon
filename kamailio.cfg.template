@@ -51,6 +51,8 @@ modparam("registrar", "default_expires", 3600)
 modparam("registrar", "min_expires", 60)
 modparam("registrar", "max_expires", 7200)
 
+modparam("rr", "force_send_socket", 1)
+
 # basic routing
 
 request_route {
@@ -75,7 +77,7 @@ request_route {
     }
 
     if (!is_method("REGISTER")) {
-        record_route();
+        record_route_advertised_address("__ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__");
     }
 
     if (is_method("REGISTER")) {
@@ -123,6 +125,7 @@ route[LOOKUP] {
 }
 
 route[RELAY] {
+    xlog("L_INFO", "Relaying $rm $ru | Call-ID=$ci | From=$fu | To=$tu\n");
     if (!t_relay()) {
         sl_reply_error();
     }
