@@ -1,6 +1,6 @@
 [from-kamailio]
 exten => __ASTERISK_NUMBER__,1,Answer(1000)
  same => n,Read(Digits,custom/hello&custom/fones&custom/dialext)
- same => n,SayNumber($Digits)
+ same => n,SayNumber(${Digits})
  same => n,Playback(custom/goodbye)
  same => n,Hangup()
