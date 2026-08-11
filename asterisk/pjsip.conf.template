@@ -22,6 +22,7 @@ type=auth
 auth_type=userpass
 username=__ASTERISK_NUMBER__
 password=__ASTERISK_SECRET__
+realm=__SIP_DOMAIN__
 
 [kamailio_endpoint]
 type=endpoint
