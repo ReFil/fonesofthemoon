@@ -51,8 +51,6 @@ modparam("registrar", "default_expires", 3600)
 modparam("registrar", "min_expires", 60)
 modparam("registrar", "max_expires", 7200)
 
-modparam("rr", "force_send_socket", 1)
-
 # basic routing
 
 request_route {
