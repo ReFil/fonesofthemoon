@@ -1,6 +1,6 @@
 [from-kamailio]
 exten => __ASTERISK_NUMBER__,1,Answer(1000)
- same => n,Read(Digits,custom/hello&custom/fones&custom/dialext)
+ same => n,Read(Digits,custom/hello&custom/fones&custom/dialext&custom/hash)
  same => n,GotoIf($[${Digits}=1]?group-call,s,1:invalid-ext,s,1)
 
 
