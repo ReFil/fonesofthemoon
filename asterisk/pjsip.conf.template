@@ -42,7 +42,7 @@ rewrite_contact=yes
 
 [kamailio_aor]
 type=aor
-contact=sip:172.16.11.4:__KAMAILIO_SIP_PORT__
+contact=sip:__SIP_DOMAIN__:__KAMAILIO_SIP_PORT__
 
 [kamailio_identify]
 type=identify
