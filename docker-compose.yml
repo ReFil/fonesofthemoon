@@ -147,6 +147,7 @@ services:
       - /mnt/Main/apps/phones-config/asterisk/extensions.conf.template:/etc/asterisk/extensions.conf.template
       - /mnt/Main/apps/phones-config/asterisk/agi/group_call.agi:/var/lib/asterisk/agi-bin/group_call.agi
       - /mnt/Main/apps/phones-config/asterisk/sounds:/var/lib/asterisk/sounds/custom
+      - /mnt/Main/apps/phones-config/asterisk/default_sounds:/var/lib/asterisk/sounds
     command: |
       sh -c '
         chmod +x /var/lib/asterisk/agi-bin/group_call.agi &&
