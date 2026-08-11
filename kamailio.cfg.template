@@ -105,7 +105,7 @@ route[REGISTER] {
 
     consume_credentials();
 
-    if (!save("location")) {
+    if (!save("location", "0x04")) {
         sl_reply_error();
     }
     exit;

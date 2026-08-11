@@ -12,7 +12,8 @@ services:
       ASTERISK_SECRET: ${ASTERISK_SECRET}
       ASTERISK_NUMBER: ${ASTERISK_NUMBER}
     networks:
-      - kamailio-net
+      kamailio-net:
+        ipv4_address: 172.16.11.2
     volumes:
       - /mnt/Main/apps/kamailio-db:/var/lib/postgresql/data
       - /mnt/Main/apps/phones-config/init.sql.template:/tmp/init.sql.template:ro
@@ -42,7 +43,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     networks:
-      - kamailio-net
+      kamailio-net:
+        ipv4_address: 172.16.11.3
     ports:
       - '${PGADMIN_PORT}:80'
     volumes:
@@ -69,7 +71,8 @@ services:
       ASTERISK_PUBLIC_IP: ${ASTERISK_PUBLIC_IP}
 
     networks:
-      - kamailio-net
+      kamailio-net:
+        ipv4_address: 172.16.11.4
     ports:
       - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/udp
     volumes:
@@ -105,7 +108,8 @@ services:
       SIP_DOMAIN: ${SIP_DOMAIN}
       WEB_ADMIN_HASH: ${WEB_ADMIN_HASH}
     networks:
-      - kamailio-net
+      kamailio-net:
+        ipv4_address: 172.16.11.5
     ports:
       - '${WEB_PORT}:80'
     volumes:
@@ -131,7 +135,8 @@ services:
       ASTERISK_PUBLIC_IP: ${ASTERISK_PUBLIC_IP}
       ASTERISK_SIP_PORT: ${ASTERISK_SIP_PORT}
     networks:
-      - kamailio-net
+      kamailio-net:
+        ipv4_address: 172.16.11.6
     ports:
       - ${ASTERISK_SIP_PORT}:${ASTERISK_SIP_PORT}/udp
       - "20000-20100:20000-20100/udp"
@@ -164,3 +169,7 @@ services:
 networks:
   kamailio-net:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.11.0/24
+          gateway: 172.16.11.1

@@ -12,7 +12,7 @@ local_net=10.8.0.0/24
 type=registration
 transport=transport-udp
 outbound_auth=kamailio_auth
-server_uri=sip:__SIP_DOMAIN__:__KAMAILIO_SIP_PORT__
+server_uri=sip:172.16.11.4:__KAMAILIO_SIP_PORT__
 client_uri=sip:__ASTERISK_NUMBER__@__SIP_DOMAIN__:__KAMAILIO_SIP_PORT__
 contact_user=__ASTERISK_NUMBER__
 retry_interval=60
@@ -42,9 +42,9 @@ rewrite_contact=yes
 
 [kamailio_aor]
 type=aor
-contact=sip:__SIP_DOMAIN__:__KAMAILIO_SIP_PORT__
+contact=sip:172.16.11.4:__KAMAILIO_SIP_PORT__
 
 [kamailio_identify]
 type=identify
 endpoint=kamailio_endpoint
-match=172.16.11.0/16
+match=172.16.11.0/24
