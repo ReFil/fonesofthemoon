@@ -1,7 +1,7 @@
 [from-kamailio]
 exten => __ASTERISK_NUMBER__,1,Answer(1000)
  same => n,Read(Digits,custom/hello&custom/fones&custom/dialext)
- same => n,GotoIf($[${Digits}=1]?group-call:invalid-ext)
+ same => n,GotoIf($[${Digits}=1]?group-call,s,1:invalid-ext,s,1)
 
 
 [invalid-ext]
@@ -11,7 +11,7 @@ exten => s,1,Playback(custom/ext)
 
 
 [group-call]
-exten => s,n,NoOp(Starting group call for group 1)
+exten => s,1,NoOp(Starting group call for group 1)
  same => n,Page(PJSIP/7477@sip.friendsofthemoon.space&PJSIP/78779@sip.friendsofthemoon.space,d,5000 )
  same => n,Hangup()
 
