@@ -4,8 +4,6 @@ protocol=udp
 bind=0.0.0.0:__ASTERISK_SIP_PORT__
 external_media_address=__ASTERISK_PUBLIC_IP__
 external_signaling_address=__ASTERISK_PUBLIC_IP__
-local_net=192.168.86.0/24
-local_net=10.8.0.0/24
 
 [kamailio]
 type=registration
