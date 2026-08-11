@@ -2,7 +2,7 @@
 
 # Set debug to 4 for additional logging
 
-debug=2
+debug=4
 log_stderror=no
 memdbg=5
 memlog=5
