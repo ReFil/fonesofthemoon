@@ -38,7 +38,7 @@ media_address=__ASTERISK_PUBLIC_IP__
 direct_media=no
 rtp_symmetric=yes
 force_rport=yes
-rewrite_contact=yes
+; rewrite_contact=yes
 
 [kamailio_aor]
 type=aor
