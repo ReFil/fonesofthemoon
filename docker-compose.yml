@@ -33,6 +33,7 @@ services:
       timeout: 5s
       retries: 5
 
+# Will be disabled once everything is actually working
   pgadmin:
     image: dpage/pgadmin4:${PGADMIN_VERSION}
     container_name: kamailio-pgadmin
@@ -77,6 +78,7 @@ services:
       - ${KAMAILIO_SIP_PORT}:${KAMAILIO_SIP_PORT}/udp
     volumes:
       - /mnt/Main/apps/phones-config/kamailio.cfg.template:/etc/kamailio/kamailio.cfg.template
+    # Standard entrypoint kept destroying my beautiful configs :(
     entrypoint: [""]
     command: |
       sh -c '

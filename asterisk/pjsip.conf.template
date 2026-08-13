@@ -2,10 +2,14 @@
 type=transport
 protocol=udp
 bind=0.0.0.0:__ASTERISK_SIP_PORT__
+# Given all the addresses this is gonna encounter are marked as LAN addresses this is probably superfluois
 external_media_address=__ASTERISK_PUBLIC_IP__
 external_signaling_address=__ASTERISK_PUBLIC_IP__
+# Docker network
 local_net=172.16.11.0/24
+# My LAN
 local_net=192.168.86.0/24
+# Wg clients
 local_net=10.8.0.0/24
 
 [kamailio]
@@ -38,6 +42,7 @@ media_address=__ASTERISK_PUBLIC_IP__
 direct_media=no
 rtp_symmetric=yes
 force_rport=yes
+# With this enabled sip packets get all sorts of skrunkled
 ; rewrite_contact=yes
 
 [kamailio_aor]
@@ -47,4 +52,5 @@ contact=sip:__SIP_DOMAIN__:__KAMAILIO_SIP_PORT__
 [kamailio_identify]
 type=identify
 endpoint=kamailio_endpoint
-match=172.16.11.0/24
+# Now kamailio addr is fixed in docker we can probably just lock this (might regret it lmao)
+match=172.16.11.4

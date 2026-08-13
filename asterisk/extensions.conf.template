@@ -9,7 +9,7 @@ exten => s,1,Playback(custom/ext)
  same => n,Playback(custom/goodbye)
  same => n,Hangup()
 
-
+; Temporarily dial the two dect phones for testing
 [group-call]
 exten => s,1,NoOp(Starting group call for group 1)
  same => n,Page(PJSIP/7477@kamailio_endpoint&PJSIP/78779@kamailio_endpoint,d,5000 )
