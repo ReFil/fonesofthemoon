@@ -22,7 +22,10 @@ exten => __ASTERISK_NUMBER__,1,Answer(1000)
 ;
 ;
 ;
-;
+;[group-call]
+;exten => s,1,NoOp(Starting group call for group ${GROUP})
+; same => n,AGI(/var/lib/asterisk/agi/group_call.agi,${GROUP})
+; same => n,Hangup()
 ;
 ;
 ;

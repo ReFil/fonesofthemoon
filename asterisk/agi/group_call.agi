@@ -7,6 +7,31 @@ $dbName = getenv('DB_NAME') ?: 'kamailio';
 $dbUser = getenv('DB_USER') ?: 'kamailio';
 $dbPass = getenv('DB_PASSWORD') ?: '';
 $domain = getenv('SIP_DOMAIN') ?: 'sip.friendsofthemoon.space';
+$endpoint = getenv('DIALOUT_ENDPOINT') ?: 'kamailio_endpoint';
+
+function execute_agi($command) {
+    fwrite(STDOUT, "$command\n");
+    fflush(STDOUT);
+    $result = fgets(STDIN);
+    $ret = array('code'=> -1, 'result'=> -1, 'timeout'=> false, 'data'=> '');
+    if (preg_match("/^([0-9]{1,3}) (.*)/", $result, $matches)) {
+        $ret['code'] = $matches[1];
+        $ret['result'] = 0;
+        if (preg_match('/^result=([0-9a-zA-Z]*)(?:\s?\((.*?)\))?$/', $matches[2], $match))  {
+            $ret['result'] = $match[1];
+            $ret['timeout'] = ($match[2] === 'timeout') ? true : false;
+            $ret['data'] = $match[2];
+        }
+    }
+    return $ret;
+}
+
+function log_agi($entry, $level = 1) {
+    if (!is_numeric($level)) {
+        $level = 1;
+    }
+    $result = execute_agi("VERBOSE \"$entry\" $level");
+}
 
 try {
     $pdo = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
@@ -17,12 +42,20 @@ try {
     $stmt->execute([$bit]);
     $users = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
+
+    $userstr = "";
+
     foreach ($users as $user) {
-        echo "EXEC Dial PJSIP/$user@$domain 30\n";
-        echo "WAIT\n";
+        $userstr .= "PJSIP/" . $user . "@" . $endpoint . "&"
     }
+
+    $cleaneduserstr = rtrim($userstr, "&");
+
+    log_agi($cleaneduserstr);
+
+    execute_agi("EXEC Page ". {$cleaneduserstr} . "d 5000");
+
     echo "EXEC Playback goodbye\n";
 } catch (PDOException $e) {
-    error_log("AGI DB error: " . $e->getMessage());
-    echo "EXEC Playback invalid\n";
+    echo "EXEC Playback custom/ext\n";
 }
