@@ -23,10 +23,6 @@ exten => __ASTERISK_NUMBER__,1,Answer(1000)
 ;
 ;
 ;
-;[group-call]
-;exten => s,1,NoOp(Starting group call for group ${GROUP})
-; same => n,AGI(/var/lib/asterisk/agi/group_call.agi,${GROUP})
-; same => n,Hangup()
 ;
 ;
 ;
@@ -48,11 +44,17 @@ exten => s,1,Playback(custom/ext)
  same => n,Playback(custom/goodbye)
  same => n,Hangup()
 
-; Temporarily dial the two dect phones for testing
 [group-call]
-exten => s,1,NoOp(Starting group call for group 1)
- same => n,Page(PJSIP/7477@kamailio_endpoint&PJSIP/78779@kamailio_endpoint,d,5000 )
+exten => s,1,NoOp(Starting group call for group ${Digits})
+ same => n,AGI(/var/lib/asterisk/agi/group_call.agi,${Digits})
  same => n,Hangup()
+
+
+; Temporarily dial the two dect phones for testing
+;[group-call]
+;exten => s,1,NoOp(Starting group call for group 1)
+; same => n,Page(PJSIP/7477@kamailio_endpoint&PJSIP/78779@kamailio_endpoint,d,5000 )
+; same => n,Hangup()
 
 [outbound]
 exten => _X.,1,Dial(PJSIP/${EXTEN}@__SIP_DOMAIN__,30)
