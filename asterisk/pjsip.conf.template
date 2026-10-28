@@ -5,6 +5,7 @@ bind=0.0.0.0:__ASTERISK_SIP_PORT__
 # Given all the addresses this is gonna encounter are marked as LAN addresses this is probably superfluois
 external_media_address=__ASTERISK_PUBLIC_IP__
 external_signaling_address=__ASTERISK_PUBLIC_IP__
+from_domain=__SIP_DOMAIN__
 # Docker network
 local_net=172.16.11.0/24
 # My LAN
