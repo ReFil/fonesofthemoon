@@ -46,7 +46,7 @@ exten => s,1,Playback(custom/ext)
 
 [group-call]
 exten => s,1,NoOp(Starting group call for group ${Digits})
- same => n,AGI(/var/lib/asterisk/agi/group_call.agi,${Digits})
+ same => n,AGI(/var/lib/asterisk/agi-bin/group_call.agi,${Digits})
  same => n,Hangup()
 
 
