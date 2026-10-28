@@ -38,7 +38,7 @@ try {
     $pdo = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    log_agi("Group number " . $group . ", Caller Id: " . $callerId)
+    log_agi("Group number " . $group . ", Caller Id: " . $callerId);
 
     $bit = 1 << ((int)$group - 1);
     $stmt = $pdo->prepare("SELECT username FROM kamailio.subscriber WHERE (group_flags & ?) > 0 ORDER BY username");
