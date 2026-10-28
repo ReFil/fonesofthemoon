@@ -49,7 +49,10 @@ try {
     $userstr = "";
 
     foreach ($users as $user) {
-        $userstr .= "PJSIP/" . $user . "@" . $endpoint . "&";
+        if ($user != $callerId) {
+            $userstr .= "PJSIP/" . $user . "@" . $endpoint . "&";
+        }
+        
     }
 
     $cleaneduserstr = rtrim($userstr, "&");
