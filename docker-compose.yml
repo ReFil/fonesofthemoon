@@ -152,6 +152,26 @@ services:
       - /mnt/Main/apps/phones-config/asterisk/default_sounds:/var/lib/asterisk/sounds
     command: |
       sh -c '
+        # install PHP for AGI scripting
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update &&
+        apt-get install -y --no-install-recommends \
+          php-cli php-pgsql php-curl php-mbstring &&
+        rm -rf /var/lib/apt/lists/*
+
+
+        # AGI needs unbuffered stdout: anything buffered after a command
+        # makes Asterisk wait forever for the response line.
+        for d in /etc/php*/conf.d /etc/php*/*/cli/conf.d; do
+          if [ -d "$d" ]; then
+            printf "output_buffering=Off\nimplicit_flush=On\ndisplay_errors=stderr\nlog_errors=On\nerror_log=/var/log/asterisk/php-agi.log\nmax_execution_time=0\n" > "$d/99-agi.ini"
+          fi
+        done
+
+        php -v | head -n 1
+        php -i | grep -i "^output_buffering"
+        # -----------------------------------------------------------------
+
         chmod +x /var/lib/asterisk/agi-bin/group_call.agi &&
         sed -e "s|__SIP_DOMAIN__|${SIP_DOMAIN}|g" \
             -e "s|__KAMAILIO_SIP_PORT__|${KAMAILIO_SIP_PORT}|g" \
