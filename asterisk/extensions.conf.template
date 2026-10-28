@@ -46,14 +46,15 @@ exten => s,1,Playback(custom/ext)
 
 [group-call]
 exten => s,1,NoOp(Starting group call for group ${Digits})
- same => n,AGI(/var/lib/asterisk/agi-bin/group_call.agi,${Digits},${CALLERID(num)})
+ same => n,Page(PJSIP/1001@kamailio_endpoint&PJSIP/78779@kamailio_endpoint,d,5000 )
+; same => n,AGI(/var/lib/asterisk/agi-bin/group_call.agi,${Digits},${CALLERID(num)})
  same => n,Hangup()
 
 
 ; Temporarily dial the two dect phones for testing
 ;[group-call]
 ;exten => s,1,NoOp(Starting group call for group 1)
-; same => n,Page(PJSIP/7477@kamailio_endpoint&PJSIP/78779@kamailio_endpoint,d,5000 )
+; same => n,Page(PJSIP/1001@kamailio_endpoint&PJSIP/78779@kamailio_endpoint,d,5000 )
 ; same => n,Hangup()
 
 [outbound]
