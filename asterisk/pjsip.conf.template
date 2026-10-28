@@ -7,8 +7,7 @@ external_media_address=__ASTERISK_PUBLIC_IP__
 external_signaling_address=__ASTERISK_PUBLIC_IP__
 # Docker network
 local_net=172.16.11.0/24
-# My LAN
-local_net=192.168.86.0/24
+
 # Wg clients
 local_net=10.8.0.0/24
 
