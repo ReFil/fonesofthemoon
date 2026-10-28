@@ -59,7 +59,7 @@ try {
 
     log_agi($cleaneduserstr);
 
-    execute_agi("EXEC Page ". $cleaneduserstr . "d 5000");
+    execute_agi("EXEC Page ". $cleaneduserstr . " d 5000");
 
     execute_agi("EXEC Playback custom/goodbye");
 } catch (PDOException $e) {
