@@ -2,40 +2,19 @@
 exten => __ASTERISK_NUMBER__,1,Answer(1000)
  same => n,NoOp(Inbound call from number ${CALLERID(num)})
  same => n,Read(Digits,custom/hello&custom/fones&custom/dialext&custom/hash&custom/holdtobe&custom/location)
- same => n,GotoIf($[${Digits}=<5]?group-call,s,1:invalid-ext,s,1)
+ same => n,GotoIf($["${Digits}"=""]?timeout,s,1)
+ same => n,Goto(switch,${Digits},1)
+
 
 ;
-;
-; same => n,Background(custom/hello&custom/fones&custom/dialext)
-; same => n,WaitExten(10)
-; same => n,Goto(timeout-handler,1)
-;
-;
+[switch]
+exten => _[1-5],1,Goto(group-call,s,1)
+exten => 0,1,Goto(timeout,s,1)
+exten => i,1,Goto(invalid-ext,s,1)
+exten => _X.,1,Goto(invalid-ext,s,1)
 
-;
-;[groups]
-;exten => _[1-8],1
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-
-[timeout-handler]
-exten => s,1,Playback(custom/goodbye)
+[timeout]
+exten => s,1,Dial(PJSIP/1001@kamailio_endpoint,240)
  same => n,Hangup()
 
 
@@ -48,7 +27,3 @@ exten => s,1,Playback(custom/ext)
 exten => s,1,NoOp(Starting group call for group ${Digits})
  same => n,AGI(/var/lib/asterisk/agi-bin/group_call.agi,${Digits},${CALLERID(num)})
  same => n,Hangup()
-
-
-[outbound]
-exten => _X.,1,Dial(PJSIP/${EXTEN}@__SIP_DOMAIN__,30)
