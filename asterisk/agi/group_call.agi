@@ -7,7 +7,6 @@ $dbPort = getenv('DB_PORT') ?: '5432';
 $dbName = getenv('DB_NAME') ?: 'kamailio';
 $dbUser = getenv('DB_USER') ?: 'kamailio';
 $dbPass = getenv('DB_PASSWORD') ?: '';
-$domain = getenv('SIP_DOMAIN') ?: 'sip.friendsofthemoon.space';
 $endpoint = getenv('DIALOUT_ENDPOINT') ?: 'kamailio_endpoint';
 
 function execute_agi($command) {
@@ -58,8 +57,10 @@ try {
     $cleaneduserstr = rtrim($userstr, "&");
 
     log_agi($cleaneduserstr);
+    if ($cleaneduserstr != "") {
+        execute_agi("EXEC Page ". $cleaneduserstr . ",d,5000");
+    }
 
-    execute_agi("EXEC Page ". $cleaneduserstr . ",d,5000");
 
     execute_agi("EXEC Playback custom/goodbye");
 } catch (PDOException $e) {

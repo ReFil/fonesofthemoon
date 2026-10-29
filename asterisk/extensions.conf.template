@@ -1,8 +1,8 @@
 [from-kamailio]
 exten => __ASTERISK_NUMBER__,1,Answer(1000)
  same => n,NoOp(Inbound call from number ${CALLERID(num)})
- same => n,Read(Digits,custom/hello&custom/fones&custom/dialext&custom/hash)
- same => n,GotoIf($[${Digits}=1]?group-call,s,1:invalid-ext,s,1)
+ same => n,Read(Digits,custom/hello&custom/fones&custom/dialext&custom/hash&custom/holdtobe&custom/location)
+ same => n,GotoIf($[${Digits}=<5]?group-call,s,1:invalid-ext,s,1)
 
 ;
 ;
@@ -49,12 +49,6 @@ exten => s,1,NoOp(Starting group call for group ${Digits})
  same => n,AGI(/var/lib/asterisk/agi-bin/group_call.agi,${Digits},${CALLERID(num)})
  same => n,Hangup()
 
-
-; Temporarily dial the two dect phones for testing
-;[group-call]
-;exten => s,1,NoOp(Starting group call for group 1)
-; same => n,Page(PJSIP/1001@kamailio_endpoint&PJSIP/78779@kamailio_endpoint,d,5000 )
-; same => n,Hangup()
 
 [outbound]
 exten => _X.,1,Dial(PJSIP/${EXTEN}@__SIP_DOMAIN__,30)

@@ -150,6 +150,8 @@ services:
       - /mnt/Main/apps/phones-config/asterisk/agi/group_call.agi:/var/lib/asterisk/agi-bin/group_call.agi
       - /mnt/Main/apps/phones-config/asterisk/sounds:/var/lib/asterisk/sounds/custom
       - /mnt/Main/apps/phones-config/asterisk/default_sounds:/var/lib/asterisk/sounds
+      - /mnt/Main/apps/phones-config/asterisk/specialsounds/${LOCATIONWAV}:/var/lib/asterisk/sounds/custom/location.wav
+
     command: |
       sh -c '
         # install PHP for AGI scripting
