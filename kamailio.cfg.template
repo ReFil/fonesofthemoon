@@ -12,6 +12,8 @@ group="kamailio"
 children=4
 auto_aliases=no
 
+#!define ASTERISK_TRUSTED_SRC "172.16.11.6" 
+
 listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__ advertise __ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__
 
 
@@ -76,6 +78,12 @@ request_route {
         exit;
     }
 
+    $var(is_trusted) = 0;
+    if ($si == ASTERISK_TRUSTED_SRC) { 
+        $var(is_trusted) = 1; 
+    }
+
+
     if (!is_method("REGISTER")) {
         record_route_advertised_address("__ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__");
     }
@@ -85,13 +93,15 @@ request_route {
         exit;
     }
 
-    if (!auth_check("__SIP_DOMAIN__", "subscriber", "1")) {
-        auth_challenge("__SIP_DOMAIN__", "0");
-        exit;
+    if ($var(is_trusted) == 0) {
+        remove_hf("P-Asserted-Identity"); 
+        remove_hf("Remote-Party-ID");
+        if (!auth_check("__SIP_DOMAIN__", "subscriber", "1")) {
+            auth_challenge("__SIP_DOMAIN__", "0");
+            exit;
+        }
+        consume_credentials();
     }
-
-    consume_credentials();
-
     if (is_method("INVITE")) {
         route(LOOKUP);
     }
