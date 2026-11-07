@@ -12,7 +12,7 @@ group="kamailio"
 children=4
 auto_aliases=no
 
-#!define ASTERISK_TRUSTED_SRC "172.16.11.6" 
+#!define ASTERISK_TRUSTED_SRC "172.16.11.1" 
 
 listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__ advertise __ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__
 
@@ -97,6 +97,7 @@ request_route {
         remove_hf("P-Asserted-Identity"); 
         remove_hf("Remote-Party-ID");
         if (!auth_check("__SIP_DOMAIN__", "subscriber", "1")) {
+            
             auth_challenge("__SIP_DOMAIN__", "0");
             exit;
         }
