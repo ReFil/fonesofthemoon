@@ -77,7 +77,7 @@ if ($authenticated && $_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['lo
     }
 }
 
-$stmt = $pdo->query("SELECT id, username, domain, password, email_address, friendly_name, group_flags FROM $schema.subscriber ORDER BY username");
+$stmt = $pdo->query("SELECT id, username, domain, password, endpoint, friendly_name, group_flags FROM $schema.subscriber ORDER BY username");
 $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -144,7 +144,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th>Friendly Name</th>
             <?php if ($authenticated): ?>
                 <th>Password</th>
-                <th>Email</th>
+                <th>Endpoint</th>
                 <th>Groups</th>
                 <th>Actions</th>
             <?php endif; ?>
@@ -156,7 +156,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?= htmlspecialchars($row['friendly_name'] ?? '') ?></td>
             <?php if ($authenticated): ?>
                 <td><?= htmlspecialchars($row['password']) ?></td>
-                <td><?= htmlspecialchars($row['email_address'] ?? '') ?></td>
+                <td><?= htmlspecialchars($row['endpoint'] ?? '') ?></td>
                 <td>
                     <?php
                     $g = [];
@@ -174,7 +174,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <input type="hidden" name="username" value="<?= htmlspecialchars($row['username']) ?>">
                         <input type="hidden" name="domain" value="<?= htmlspecialchars($row['domain']) ?>">
                         <input type="text" name="friendly_name" value="<?= htmlspecialchars($row['friendly_name'] ?? '') ?>" placeholder="name" style="width:100px">
-                        <input type="password" name="password" placeholder="new password" required style="width:120px">
+                        <input type="password" name="password" value="<?= htmlspecialchars($row['password']) ?>" placeholder="new password" required style="width:120px">
                         <span class="groups">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                             <label><input type="checkbox" name="group<?= $i ?>" value="1" <?= (($row['group_flags'] ?? 0) & (1 << ($i - 1))) ? 'checked' : '' ?>> G<?= $i ?></label>

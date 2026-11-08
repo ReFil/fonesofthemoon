@@ -2,7 +2,7 @@
 
 This is the repository for the fones of the moon setup and configuration
 
-A lot is still tbd
+A lot is still tbd and honestly the more i do the ore ashamed I am of the state of things
 
 1. Theme the manager
 2. Setup and document asterisk
