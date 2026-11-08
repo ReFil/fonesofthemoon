@@ -83,14 +83,12 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Kamailio Subscriber Manager</title>
+    <title>Fones of the moon</title>
+    <link rel="stylesheet" href="./style.css" />
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link rel="icon" href="assets/moon.ico">
     <style>
-        body { font-family: sans-serif; max-width: 1000px; margin: 2em auto; padding: 0 1em; }
-        h1, h2 { color: #333; }
-        table { border-collapse: collapse; width: 100%; margin-top: 1em; }
-        th, td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
-        th { background: #f0f0f0; }
         form { display: inline; }
         input[type=text], input[type=password] { padding: 0.4em; width: 140px; }
         button { padding: 0.4em 1em; cursor: pointer; }

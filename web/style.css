@@ -1,0 +1,166 @@
+@font-face {
+    font-family: "OCR-A";
+    src: url("./assets/fonts/ocr-a.ttf");
+}
+
+@font-face {
+    font-family: "OCR_B";
+    src: url("./assets/fonts/ocr-b.ttf");
+}
+
+:root {
+    --ourple: #2f1945;
+    --ourple-clear: #2f194596;
+    --blue-passport: #090336ac;
+    --ourple-gradient: linear-gradient(90deg, var(--blue-passport) 0%, var(--ourple) 50%, var(--blue-passport) 100%);
+}
+
+table {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+table,
+th,
+td {
+    border: 1px solid white;
+}
+
+body {
+    background-image: url("./assets/bg.gif");
+    color: white;
+    background-color: black;
+    font-family: "OCR-B", monospace;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: 40pt;
+    margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "OCR-A", monospace;
+}
+
+.people {
+    text-align: left;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
+    gap: 1rem;
+    padding-bottom: 50px;
+}
+
+.person h3 {
+    font-style: italic;
+    font-size: 20pt;
+    margin: 0;
+}
+
+.person {
+    background-color: var(--ourple-clear);
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: solid white 1px;
+}
+
+.person img {
+    image-rendering: pixelated;
+}
+
+.titlebar {
+    margin: 20px;
+    padding: 20px;
+    background: var(--ourple-gradient);
+
+    border-radius: 10px;
+}
+
+.holyshitapronounsbox h4 {
+    font-family: "OCR-B", monospace;
+    margin: 0;
+}
+
+@media screen and (min-width: 370px) {
+    .persontitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .holyshitapronounsbox {
+        margin-left: auto;
+        text-align: right;
+    }
+}
+
+.content {
+    background: var(--ourple-clear);
+    margin: auto;
+    margin-bottom: 100px;
+    padding: 10px 50px 10px 50px;
+    max-width: 1000px;
+    height: fit-content;
+    border-radius: 10px;
+}
+
+.links {
+    font-family: "OCR-B", monospace;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.links .link-item {
+    font-family: "OCR-B", monospace;
+    color: #ffffff;
+    font-size: 20px;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.badge-grid {
+    display: block;
+    margin-top: auto;
+}
+
+.badge-grid a {
+    display: inline-block;
+    width: 88px;
+    height: 31px;
+    line-height: 0;
+    text-decoration: none;
+}
+
+.badge-grid img {
+    display: block;
+    width: 88px;
+    height: 31px;
+}
+
+div.hannah {
+    display: flex;
+    flex-direction: column;
+}
+
+div.hannah .bingbong {
+    width: 100px;
+}
+
+@media screen and (min-width: 370px) {
+    div.hannah p {
+        width: 75%;
+    }
+
+    div.hannah .bingbong {
+        margin-top: -45px;
+        align-self: last baseline;
+    }
+}

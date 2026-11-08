@@ -32,3 +32,24 @@ then copy to the asterisk/sounds directory and reference in the conf file(s)
 
 ## Deploying it yourself
 
+Uhh good luck honestly, this is rapidly spiralling out of control and I keep bolting new bits on and forgetting what i'm doing. This will be properly documented at some point. 
+
+## Problems yet to solve
+
+Some but not all of the wireguard clients dont get their IP correctly masqueraded by the server and so RTP only goes in one direction
+
+Going to a DECT RFP this doesnt work
+```
+16:04:58.171044 IP (tos 0xb8, ttl 64, id 18429, offset 0, flags [DF], proto UDP (17), length 200)
+    192.168.1.14.16338 > 10.8.0.5.65442: UDP, length 172
+16:04:58.188787 IP (tos 0x0, ttl 127, id 33016, offset 0, flags [none], proto UDP (17), length 200)
+    charizard.localdomain.65442 > 192.168.1.14.16338: UDP, length 172
+```
+
+But calling from a different device connected to the same qireguard endopoint this happens and it works fin4e, and I'm unsure why
+```
+16:07:16.241485 IP (tos 0xb8, ttl 64, id 27334, offset 0, flags [DF], proto UDP (17), length 200)
+    192.168.1.14.16344 > 10.8.0.12.41787: UDP, length 172
+16:07:16.250190 IP (tos 0x0, ttl 63, id 1951, offset 0, flags [DF], proto UDP (17), length 200)
+    10.8.0.12.41787 > 192.168.1.14.16344: UDP, length 172
+```
