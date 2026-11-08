@@ -14,7 +14,10 @@ auto_aliases=no
 
 #!define ASTERISK_TRUSTED_SRC "172.16.11.1" 
 
-listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__ advertise __ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__
+listen=udp:0.0.0.0:__KAMAILIO_SIP_PORT__ 
+advertise __ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__
+alias="__ASTERISK_PUBLIC_IP__:__KAMAILIO_SIP_PORT__"
+alias="__SIP_DOMAIN__:__KAMAILIO_SIP_PORT__"
 
 
 loadmodule "db_postgres.so"
@@ -52,6 +55,8 @@ modparam("alias_db", "use_domain", 1)
 modparam("registrar", "default_expires", 3600)
 modparam("registrar", "min_expires", 60)
 modparam("registrar", "max_expires", 7200)
+
+modparam("registrar", "gruu_enabled", 0)
 
 # basic routing
 
