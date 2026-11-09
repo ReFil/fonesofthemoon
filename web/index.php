@@ -92,11 +92,11 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         form { display: inline; }
         input[type=text], input[type=password] { padding: 0.4em; width: 140px; }
         button { padding: 0.4em 1em; cursor: pointer; }
-        .message { background: #00ff002b; border: 1px solid #0c0; padding: 0.8em; margin-bottom: 1em; border-radius: 4px; }
-        .error { background: #ffe6e6; border: 1px solid #c00; padding: 0.8em; margin-bottom: 1em; border-radius: 4px; }
-        .danger { background: #ffe6e6; border-color: #c00; }
+        .message { background: #00ff002b; border: 1px solid #0c0; padding: 0.8em; margin-bottom: 1em; }
+        .error { background: #f9f9f921; border: 1px solid #c00; padding: 0.8em; margin-bottom: 1em; }
+        .danger { background: #f9f9f921; border-color: #c00; }
         .groups label { margin-right: 0.8em; font-size: 0.9em; }
-        .login-box { background: #f9f9f921; border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; border-radius: 4px; max-width: 400px; align-items: center; }
+        .login-box { background: #f9f9f921; border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; max-width: 400px; float: center; }
         .logout { float: center; }
     </style>
 </head>
@@ -165,7 +165,6 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php if (!$authenticated): ?>
         <div class="login-box">
             <h2>Admin Login</h2>
-            <p>Public users can view phone numbers and names only. Login to edit or delete subscribers.</p>
             <form method="POST">
                 <input type="hidden" name="login" value="1">
                 <label>Password: <input type="password" name="admin_password" required></label>
@@ -173,6 +172,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </form>
         </div>
     <?php else: ?>
+        <p></p>
         <a href="?logout=1" class="logout"><button>Logout</button></a>
 
         <h2>Add Subscriber</h2>
