@@ -96,49 +96,20 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .error { background: #ffe6e6; border: 1px solid #c00; padding: 0.8em; margin-bottom: 1em; border-radius: 4px; }
         .danger { background: #ffe6e6; border-color: #c00; }
         .groups label { margin-right: 0.8em; font-size: 0.9em; }
-        .login-box { background: #f9f9f9; border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; border-radius: 4px; max-width: 400px; }
+        .login-box { background: #f9f9f9; border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; border-radius: 4px; max-width: 400px; align-items: center; }
         .logout { float: right; }
     </style>
 </head>
 <body>
-    <h1>Kamailio Subscriber Manager</h1>
+    <h1>Fones of the moon</h1>
     <?php if ($message): ?><div class="message"><?= htmlspecialchars($message) ?></div><?php endif; ?>
     <?php if ($authError): ?><div class="error"><?= htmlspecialchars($authError) ?></div><?php endif; ?>
 
-    <?php if (!$authenticated): ?>
-        <div class="login-box">
-            <h2>Admin Login</h2>
-            <p>Public users can view phone numbers and names only. Login to edit or delete subscribers.</p>
-            <form method="POST">
-                <input type="hidden" name="login" value="1">
-                <label>Password: <input type="password" name="admin_password" required></label>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    <?php else: ?>
-        <a href="?logout=1" class="logout"><button>Logout</button></a>
-
-        <h2>Add Subscriber</h2>
-        <form method="POST">
-            <input type="hidden" name="action" value="add">
-            <label>Username: <input type="text" name="username" required></label>
-            <label>Domain: <input type="text" name="domain" value="<?= htmlspecialchars($defaultDomain) ?>" required></label>
-            <label>Friendly Name: <input type="text" name="friendly_name"></label>
-            <label>Password: <input type="password" name="password" required></label>
-            <span class="groups">
-                <?php for ($i = 1; $i <= 5; $i++): ?>
-                <label><input type="checkbox" name="group<?= $i ?>" value="1"> G<?= $i ?></label>
-                <?php endfor; ?>
-            </span>
-            <button type="submit">Add</button>
-        </form>
-    <?php endif; ?>
-
-    <h2>Subscribers</h2>
+    <h2>Known numbers</h2>
     <table>
         <tr>
-            <th>Username</th>
-            <th>Domain</th>
+            <th>Number</th>
+            <th>Location</th>
             <th>Friendly Name</th>
             <?php if ($authenticated): ?>
                 <th>Password</th>
@@ -191,5 +162,34 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tr>
         <?php endforeach; ?>
     </table>
+    <?php if (!$authenticated): ?>
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <p>Public users can view phone numbers and names only. Login to edit or delete subscribers.</p>
+            <form method="POST">
+                <input type="hidden" name="login" value="1">
+                <label>Password: <input type="password" name="admin_password" required></label>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    <?php else: ?>
+        <a href="?logout=1" class="logout"><button>Logout</button></a>
+
+        <h2>Add Subscriber</h2>
+        <form method="POST">
+            <input type="hidden" name="action" value="add">
+            <label>Username: <input type="text" name="username" required></label>
+            <label>Domain: <input type="text" name="domain" value="<?= htmlspecialchars($defaultDomain) ?>" required></label>
+            <label>Friendly Name: <input type="text" name="friendly_name"></label>
+            <label>Password: <input type="password" name="password" required></label>
+            <span class="groups">
+                <?php for ($i = 1; $i <= 5; $i++): ?>
+                <label><input type="checkbox" name="group<?= $i ?>" value="1"> G<?= $i ?></label>
+                <?php endfor; ?>
+            </span>
+            <button type="submit">Add</button>
+        </form>
+    <?php endif; ?>
+
 </body>
 </html>
