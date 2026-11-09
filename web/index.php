@@ -92,12 +92,12 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         form { display: inline; }
         input[type=text], input[type=password] { padding: 0.4em; width: 140px; }
         button { padding: 0.4em 1em; cursor: pointer; }
-        .message { background: #e6ffe6; border: 1px solid #0c0; padding: 0.8em; margin-bottom: 1em; border-radius: 4px; }
+        .message { background: #00ff002b; border: 1px solid #0c0; padding: 0.8em; margin-bottom: 1em; border-radius: 4px; }
         .error { background: #ffe6e6; border: 1px solid #c00; padding: 0.8em; margin-bottom: 1em; border-radius: 4px; }
         .danger { background: #ffe6e6; border-color: #c00; }
         .groups label { margin-right: 0.8em; font-size: 0.9em; }
-        .login-box { background: #f9f9f9; border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; border-radius: 4px; max-width: 400px; align-items: center; }
-        .logout { float: right; }
+        .login-box { background: #f9f9f921; border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; border-radius: 4px; max-width: 400px; align-items: center; }
+        .logout { float: center; }
     </style>
 </head>
 <body>
