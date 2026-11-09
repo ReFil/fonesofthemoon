@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS subscriber (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(64) NOT NULL,
     domain VARCHAR(64) NOT NULL DEFAULT '',
-    password VARCHAR(64) NOT NULL,
+    password VARCHAR(64),
     endpoint VARCHAR(64),
     ha1 VARCHAR(128),
     ha1b VARCHAR(128),

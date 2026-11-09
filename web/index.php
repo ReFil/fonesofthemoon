@@ -49,6 +49,13 @@ if (isset($_GET['logout'])) {
 
 $authenticated = !empty($_SESSION['authenticated']);
 
+// Handle logout
+if (isset($_GET['purge'])) {
+    session_destroy();
+    header('Location: /');
+    exit;
+}
+
 // Handle add/edit/delete only when authenticated
 if ($authenticated && $_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['login'])) {
     $action = $_POST['action'] ?? '';
@@ -67,12 +74,13 @@ if ($authenticated && $_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['lo
         $stmt = $pdo->prepare("DELETE FROM $schema.subscriber WHERE username = ? AND domain = ?");
         $stmt->execute([$username, $domain]);
         $message = 'Subscriber deleted.';
-    } elseif (($action === 'add' || $action === 'edit') && $username !== '' && $domain !== '' && $password !== '') {
+    } elseif (($action === 'add' || $action === 'edit') && $username !== '' && $domain !== '' && ($password !== '' || $domain != $defaultDomain)) {
         $h1 = ha1($username, $domain, $password);
         $h1b = ha1b($username, $domain, $password);
-        $stmt = $pdo->prepare("INSERT INTO $schema.subscriber (username, domain, password, ha1, ha1b, friendly_name, group_flags) VALUES (?, ?, ?, ?, ?, ?, ?)
+        $endpoint = ($domain == $defaultDomain) ? "kamailio_endpoint" : "event_endpoint";
+        $stmt = $pdo->prepare("INSERT INTO $schema.subscriber (username, domain, password, endpoint, ha1, ha1b, friendly_name, group_flags) VALUES (?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (username, domain) DO UPDATE SET password = EXCLUDED.password, ha1 = EXCLUDED.ha1, ha1b = EXCLUDED.ha1b, friendly_name = EXCLUDED.friendly_name, group_flags = EXCLUDED.group_flags");
-        $stmt->execute([$username, $domain, $password, $h1, $h1b, $friendlyName, $groupFlags]);
+        $stmt->execute([$username, $domain, $password, $endpoint, $h1, $h1b, $friendlyName, $groupFlags]);
         $message = $action === 'add' ? 'Subscriber added.' : 'Subscriber updated.';
     }
 }
@@ -169,6 +177,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
     <?php else: ?>
         <a href="?logout=1"><button>Logout</button></a>
+        <a href="?purge=1"><button>Purge Event registrations (be careful!)</button></a>
 
         <h2>Add Subscriber</h2>
         <form method="POST">
@@ -176,7 +185,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <label>Username: <input type="text" name="username" required></label>
             <label>Domain: <input type="text" name="domain" value="<?= htmlspecialchars($defaultDomain) ?>" required></label>
             <label>Friendly Name: <input type="text" name="friendly_name"></label>
-            <label>Password: <input type="password" name="password" required></label>
+            <label>Password: <input type="password" name="password"></label>
             <span class="groups">
                 <?php for ($i = 1; $i <= 5; $i++): ?>
                 <label><input type="checkbox" name="group<?= $i ?>" value="1"> G<?= $i ?></label>
