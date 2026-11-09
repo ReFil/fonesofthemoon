@@ -96,8 +96,6 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .error { background: #f9f9f921; border: 1px solid #c00; padding: 0.8em; margin-bottom: 1em; }
         .danger { background: #f9f9f921; border-color: #c00; }
         .groups label { margin-right: 0.8em; font-size: 0.9em; }
-        .login-box { background: #f9f9f921; border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; max-width: 400px; float: center; }
-        .logout { float: center; }
     </style>
 </head>
 <body>
@@ -162,18 +160,17 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tr>
         <?php endforeach; ?>
     </table>
+    <p></p>
+
     <?php if (!$authenticated): ?>
-        <div class="login-box">
-            <h2>Admin Login</h2>
-            <form method="POST">
-                <input type="hidden" name="login" value="1">
-                <label>Password: <input type="password" name="admin_password" required></label>
-                <button type="submit">Login</button>
-            </form>
-        </div>
+        <h2>Admin Login</h2>
+        <form method="POST">
+            <input type="hidden" name="login" value="1">
+            <label>Password: <input type="password" name="admin_password" required></label>
+            <button type="submit">Login</button>
+        </form>
     <?php else: ?>
-        <p></p>
-        <a href="?logout=1" class="logout"><button>Logout</button></a>
+        <a href="?logout=1"><button>Logout</button></a>
 
         <h2>Add Subscriber</h2>
         <form method="POST">
