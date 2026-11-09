@@ -147,7 +147,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <input type="hidden" name="username" value="<?= htmlspecialchars($row['username']) ?>">
                         <input type="hidden" name="domain" value="<?= htmlspecialchars($row['domain']) ?>">
                         <input type="text" name="friendly_name" value="<?= htmlspecialchars($row['friendly_name'] ?? '') ?>" placeholder="name" style="width:100px">
-                        <input type="password" name="password" value="<?= htmlspecialchars($row['password']) ?>" placeholder="new password" required style="width:120px">
+                        <input type="password" name="password" value="<?= htmlspecialchars($row['password']) ?>" placeholder="new password" style="width:120px">
                         <span class="groups">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                             <label><input type="checkbox" name="group<?= $i ?>" value="1" <?= (($row['group_flags'] ?? 0) & (1 << ($i - 1))) ? 'checked' : '' ?>> G<?= $i ?></label>
@@ -177,7 +177,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
     <?php else: ?>
         <a href="?logout=1"><button>Logout</button></a>
-        <a href="?purge=1"><button>Purge Event registrations (be careful!)</button></a>
+        <a href="?purge=1" onclick="return confirm('Are you sure?')><button>Purge Event registrations (be careful!)</button></a>
 
         <h2>Add Subscriber</h2>
         <form method="POST">

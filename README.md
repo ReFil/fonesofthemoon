@@ -4,11 +4,12 @@ This is the repository for the fones of the moon setup and configuration
 
 A lot is still tbd and honestly the more i do the ore ashamed I am of the state of things
 
-1. Theme the manager
-2. Setup and document asterisk
-4. Add OMM
-3. remove pgadmin if manager works
-4. Create a new branch for pinging an external phones system e.g. at events
+1. Finish the manager - allow one hit button to purge all event registed phones
+2. Setup asterisk AGI script to call external endpoints as well in groups
+3. Add external endpoint to asterisk
+4. Setup call proxying for asterisks external endpoint in the main dialplan
+5. Asterisk voicemail?
+2. Add OMM
 
 ## DB
 
@@ -20,7 +21,7 @@ Kamailio is the SIP server managing all the connections. For either a dect
 
 ## Asterisk
 
-Asterisk manages the moon group calling for now, but maybe it will be tweaked in the fitire to do more fun things
+Asterisk manages the moon group calling for now, but maybe it will be tweaked in the fitire to do more fun things e.g. games
 
 
 
@@ -53,3 +54,5 @@ But calling from a different device connected to the same qireguard endopoint th
 16:07:16.250190 IP (tos 0x0, ttl 63, id 1951, offset 0, flags [DF], proto UDP (17), length 200)
     10.8.0.12.41787 > 192.168.1.14.16344: UDP, length 172
 ```
+
+This may have been wireguard doing NAT on some connections but not others, even though it really shouldn't mix them both, may be fixed now.
