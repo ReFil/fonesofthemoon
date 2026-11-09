@@ -78,7 +78,7 @@ if ($authenticated && $_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['lo
         $h1 = ha1($username, $domain, $password);
         $h1b = ha1b($username, $domain, $password);
         $endpoint = ($domain == $defaultDomain) ? "kamailio_endpoint" : "event_endpoint";
-        $stmt = $pdo->prepare("INSERT INTO $schema.subscriber (username, domain, password, endpoint, ha1, ha1b, friendly_name, group_flags) VALUES (?, ?, ?, ?, ?, ?, ?)
+        $stmt = $pdo->prepare("INSERT INTO $schema.subscriber (username, domain, password, endpoint, ha1, ha1b, friendly_name, group_flags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (username, domain) DO UPDATE SET password = EXCLUDED.password, ha1 = EXCLUDED.ha1, ha1b = EXCLUDED.ha1b, friendly_name = EXCLUDED.friendly_name, group_flags = EXCLUDED.group_flags");
         $stmt->execute([$username, $domain, $password, $endpoint, $h1, $h1b, $friendlyName, $groupFlags]);
         $message = $action === 'add' ? 'Subscriber added.' : 'Subscriber updated.';
