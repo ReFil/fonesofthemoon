@@ -94,7 +94,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         button { padding: 0.4em 1em; cursor: pointer; }
         .message { background: #00ff002b; border: 1px solid #0c0; padding: 0.8em; margin-bottom: 1em; }
         .error { background: #f9f9f921; border: 1px solid #c00; padding: 0.8em; margin-bottom: 1em; }
-        .danger { background: #f9f9f921; border-color: #c00; }
+        .danger { background: #8a000021; border-color: #c00; }
         .groups label { margin-right: 0.8em; font-size: 0.9em; }
     </style>
 </head>
@@ -119,10 +119,9 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($subscribers as $row): ?>
         <tr>
             <td><?= htmlspecialchars($row['username']) ?></td>
-            <td><?= htmlspecialchars($row['domain']) ?></td>
+            <td><?= htmlspecialchars(($row['domain'] == "$defaultDomain") ? "Local" : "Event") ?></td>
             <td><?= htmlspecialchars($row['friendly_name'] ?? '') ?></td>
             <?php if ($authenticated): ?>
-                <td><?= htmlspecialchars($row['password']) ?></td>
                 <td><?= htmlspecialchars($row['endpoint'] ?? '') ?></td>
                 <td>
                     <?php
