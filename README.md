@@ -9,6 +9,7 @@ A lot is still tbd and honestly the more i do the ore ashamed I am of the state 
 3. Add external endpoint to asterisk
 4. Setup call proxying for asterisks external endpoint in the main dialplan
 5. Asterisk voicemail?
+6. write up on the webpage how it all works before I fogor
 2. Add OMM
 
 ## DB
