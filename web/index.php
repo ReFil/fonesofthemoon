@@ -94,7 +94,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         button { padding: 0.4em 1em; cursor: pointer; }
         .message { background: #00ff002b; border: 1px solid #0c0; padding: 0.8em; margin-bottom: 1em; }
         .error { background: #f9f9f921; border: 1px solid #c00; padding: 0.8em; margin-bottom: 1em; }
-        .danger { background: #8a000021; border-color: #c00; }
+        .danger { background: #d20000a4; border-color: #c00; }
         .groups label { margin-right: 0.8em; font-size: 0.9em; }
     </style>
 </head>
@@ -110,7 +110,6 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th>Location</th>
             <th>Friendly Name</th>
             <?php if ($authenticated): ?>
-                <th>Password</th>
                 <th>Endpoint</th>
                 <th>Groups</th>
                 <th>Actions</th>
