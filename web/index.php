@@ -51,6 +51,10 @@ $authenticated = !empty($_SESSION['authenticated']);
 
 // Handle logout
 if (isset($_GET['purge'])) {
+    if($authenticated) {
+        $stmt = $pdo->prepare("DELETE FROM $schema.subscriber WHERE endpoint = ?");
+        $stmt->execute(["event_endpoint"]);
+    }
     session_destroy();
     header('Location: /');
     exit;

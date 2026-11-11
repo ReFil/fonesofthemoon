@@ -15,7 +15,7 @@ exten => _X.,1,Goto(invalid-ext,s,1)
 
 [timeout]
 exten => s,1,NoOp(Calling the Moon)
- same => n,ExecIf($["${CALLERID(num)}" = "1000"]?Hangup())
+ same => n,ExecIf($["${CALLERID(num)}" = "1000"]?Goto(invalid-ext,s,1))
  same => n,Dial(PJSIP/1000@kamailio_endpoint,240)
  same => n,Hangup()
 

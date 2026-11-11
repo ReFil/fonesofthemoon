@@ -4,8 +4,8 @@ This is the repository for the fones of the moon setup and configuration
 
 A lot is still tbd and honestly the more i do the ore ashamed I am of the state of things
 
-1. Finish the manager - allow one hit button to purge all event registed phones
-2. Setup asterisk AGI script to call external endpoints as well in groups
+1. Finish the manager - allow one hit button to purge all event registed phones - done needs test
+2. Setup asterisk AGI script to call external endpoints as well in groups - done needs test
 3. Add external endpoint to asterisk
 4. Setup call proxying for asterisks external endpoint in the main dialplan
 5. Asterisk voicemail?

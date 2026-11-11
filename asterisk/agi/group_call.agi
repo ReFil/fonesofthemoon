@@ -8,6 +8,9 @@ $dbName = getenv('DB_NAME') ?: 'kamailio';
 $dbUser = getenv('DB_USER') ?: 'kamailio';
 $dbPass = getenv('DB_PASSWORD') ?: '';
 $endpoint = getenv('DIALOUT_ENDPOINT') ?: 'kamailio_endpoint';
+$event_en = getenv('EVENT_SERVER_ENABLED') ?: '0';
+
+// Functions taken from https://www.voip-info.org/asterisk-agi-php/
 
 function execute_agi($command) {
     fwrite(STDOUT, "$command\n");
@@ -40,16 +43,16 @@ try {
     log_agi("Group number " . $group . ", Caller Id: " . $callerId);
 
     $bit = 1 << ((int)$group - 1);
-    $stmt = $pdo->prepare("SELECT username FROM kamailio.subscriber WHERE (group_flags & ?) > 0 ORDER BY username");
+    $stmt = $pdo->prepare("SELECT username, endpoint FROM kamailio.subscriber WHERE (group_flags & ?) > 0 ORDER BY username");
     $stmt->execute([$bit]);
-    $users = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     $userstr = "";
 
     foreach ($users as $user) {
-        if ($user != $callerId) {
-            $userstr .= "PJSIP/" . $user . "@" . $endpoint . "&";
+        if ($user['username'] != $callerId && (($event_en == '1' && $user['endpoint'] != $endpoint) || $user['endpoint'] == $endpoint)) {
+            $userstr .= "PJSIP/" . $user['username'] . "@" . $user['endpoint'] . "&";
         }
         
     }
