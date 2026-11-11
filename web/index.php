@@ -181,7 +181,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
     <?php else: ?>
         <a href="?logout=1"><button>Logout</button></a>
-        <a href="?purge=1" onclick="return confirm('Are you sure?')><button>Purge Event registrations (be careful!)</button></a>
+        <a href="?purge=1" onclick="return confirm('Are you sure?')"> <button>Purge Event registrations (be careful!)</button></a>
 
         <h2>Add Subscriber</h2>
         <form method="POST">
