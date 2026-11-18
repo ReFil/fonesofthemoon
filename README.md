@@ -4,13 +4,13 @@ This is the repository for the fones of the moon setup and configuration
 
 A lot is still tbd and honestly the more i do the ore ashamed I am of the state of things
 
-1. Finish the manager - allow one hit button to purge all event registed phones - done needs test
-2. Setup asterisk AGI script to call external endpoints as well in groups - done needs test
-3. Add external endpoint to asterisk
-4. Setup call proxying for asterisks external endpoint in the main dialplan
-5. Asterisk voicemail?
-6. write up on the webpage how it all works before I fogor
-2. Add OMM
+1. Setup asterisk AGI script to call external endpoints as well in groups - done needs test
+2. Add external endpoint to asterisk
+3. Setup call proxying for asterisks external endpoint in the main dialplan
+4. Asterisk voicemail?
+5. write up on the webpage how it all works before I fogor
+6. Add OMM
+7. EVENT_IP=$(ping -q -c1 -t1 sip.friendsofthemoon.space | tr -d '()' | awk '/^PING/{print $3}')
 
 ## DB
 

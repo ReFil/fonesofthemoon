@@ -3,15 +3,42 @@ exten => __ASTERISK_NUMBER__,1,Answer(1000)
  same => n,NoOp(Inbound call from number ${CALLERID(num)})
  same => n,Read(Digits,custom/hello&custom/fones&custom/dialext&custom/hash&custom/holdtobe&custom/location)
  same => n,GotoIf($["${Digits}"=""]?timeout,s,1)
- same => n,Goto(switch,${Digits},1)
+ same => n,Goto(switchlocal,${Digits},1)
 
+[from-event]
+exten => __ASTERISK_NUMBER__,1,Answer(1000)
+ same => n,NoOp(Inbound call from number ${CALLERID(num)})
+ same => n,Read(Digits,custom/hello&custom/fones&custom/dialext&custom/hash&custom/holdtobe&custom/location)
+ same => n,GotoIf($["${Digits}"=""]?timeout,s,1)
+ same => n,Goto(switchexternal,${Digits},1)
 
-;
-[switch]
+[switchlocal]
 exten => _[1-5],1,Goto(group-call,s,1)
 exten => 0,1,Goto(timeout,s,1)
+exten => 10,1,Goto(dialexternal,s,1)
 exten => i,1,Goto(invalid-ext,s,1)
 exten => _X.,1,Goto(invalid-ext,s,1)
+
+[switchexternal]
+exten => _[1-5],1,Goto(group-call,s,1)
+exten => 0,1,Goto(timeout,s,1)
+exten => 10,1,Goto(dialinternal,s,1)
+exten => i,1,Goto(invalid-ext,s,1)
+exten => _X.,1,Goto(invalid-ext,s,1)
+
+[dialexternal]
+exten => s,1,NoOp(Dialling out)
+ same => n,Read(Numtodial,custom/pleasedial&custom/external&custom/number&custom/hash)
+ same => n,GotoIf($["${Numtodial}"=""]?timeout,s,1)
+ same => n,Dial(PJSIP/${Numtodial}@event_endpoint,240)
+ same => n,Hangup()
+
+[dialinternal]
+exten => s,1,NoOp(Dialling in)
+ same => n,Read(Numtodial,custom/pleasedial&custom/internal&custom/number&custom/hash)
+ same => n,GotoIf($["${Numtodial}"=""]?timeout,s,1)
+ same => n,Dial(PJSIP/${Numtodial}@kamailio_endpoint,240)
+ same => n,Hangup()
 
 [timeout]
 exten => s,1,NoOp(Calling the Moon)
