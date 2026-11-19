@@ -16,6 +16,7 @@ exten => __ASTERISK_NUMBER__,1,Answer(1000)
 exten => _[1-5],1,Goto(group-call,s,1)
 exten => 0,1,Goto(timeout,s,1)
 exten => 10,1,Goto(dialexternal,s,1)
+exten => 852,1,Goto(portal,s,1)
 exten => i,1,Goto(invalid-ext,s,1)
 exten => _X.,1,Goto(invalid-ext,s,1)
 
@@ -23,6 +24,7 @@ exten => _X.,1,Goto(invalid-ext,s,1)
 exten => _[1-5],1,Goto(group-call,s,1)
 exten => 0,1,Goto(timeout,s,1)
 exten => 10,1,Goto(dialinternal,s,1)
+exten => 852,1,Goto(portal,s,1)
 exten => i,1,Goto(invalid-ext,s,1)
 exten => _X.,1,Goto(invalid-ext,s,1)
 
@@ -44,6 +46,10 @@ exten => s,1,NoOp(Dialling in)
 exten => s,1,NoOp(Calling the Moon)
  same => n,ExecIf($["${CALLERID(num)}" = "1000"]?Goto(invalid-ext,s,1))
  same => n,Dial(PJSIP/1000@kamailio_endpoint,240)
+ same => n,Hangup()
+
+[portal]
+exten => s,1,Playback(custom/portalsong)
  same => n,Hangup()
 
 
